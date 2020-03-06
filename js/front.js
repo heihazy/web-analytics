@@ -10,26 +10,68 @@
 })();
 
 $(function() {
-  var pathname = window.location.pathname;
   /* $(document).on("view:productPage", function() {
     console.log("You are at product page");
-  });
-  $(document).on("view:HomePage", function() {
+  }); */
+  /* $(document).on("view:HomePage", function() {
     console.log("You are at home page");
   }); */
 
-  if (pathname === "/detail.html") {
-    $(document).trigger("view:productPage");
-  } else if (pathname === "/index.html") {
-    $(document).trigger("view:HomePage");
-  } else if (pathname === "/basket.html") {
-    $(document).trigger("view:Basket");
-  } else if (pathname === "/checkout1.html") {
-    $(document).trigger("view:Checkout");
-  } else if (pathname === "/checkout2.html") {
-    $(document).trigger("view:Delivery");
-  } else pathname === "/checkout3.html";
-  $(document).trigger("view:Payment");
+  function getPageName() {
+    var pathname = window.location.pathname;
+    if (pathname.indexOf("/detail.html") > -1) {
+      return "productPage";
+    } else if (pathname.indexOf("/index.html") > -1) {
+      return "HomePage";
+    } else if (pathname.indexOf("/basket.html") > -1) {
+      return "Basket";
+    } else if (pathname.indexOf("/checkout1.html") > -1) {
+      return "Checkout";
+    } else if (pathname.indexOf("/checkout2.html") > -1) {
+      return "Delivery";
+    } else if (pathname.indexOf("/checkout3.html") > -1) {
+      return "Payment";
+    }
+  }
+
+  function getProduct() {
+    var productInfo = null;
+    if (pageName === "productPage") {
+      productInfo = {};
+      productInfo.productName = $("#productMain h1.text-center").text();
+      productInfo.productPrice = $("#productMain .price").text();
+      productInfo.productImage = $('.item [src="img/detailbig1.jpg"]');
+      return productInfo;
+    }
+    return productInfo;
+  }
+
+  function getPurchase() {
+    var purchase = [];
+      
+    return {
+      totalPrice:...;
+      products: purchase;
+    };
+  }
+
+  function getParam() {
+    var result = null;
+    if (pageName === "productPage") {
+      result = getProduct();
+      return result;
+    }
+    if (pageName === 'Checkout') {
+      result = getPurchase();
+      return result;
+    }
+  }
+
+  function triggerPageEvent() {
+    var pageName = getPageName();
+    var param = getParam();
+    $(document).trigger("view:" + pageName, param);
+  }
 
   $('.box-footer [type="submit"]').click(function() {
     $(document).trigger("conversion");
