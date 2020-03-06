@@ -1,11 +1,39 @@
+(function() {
+  var script = document.createElement("SCRIPT");
+  script.src =
+    "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js";
+  script.type = "text/javascript";
+  script.onload = function() {
+    var $ = window.jQuery;
+  };
+  document.getElementsByTagName("head")[0].appendChild(script);
+})();
+
 $(function() {
   var pathname = window.location.pathname;
-  $(document).on("view:productPage", function() {
+  /* $(document).on("view:productPage", function() {
     console.log("You are at product page");
   });
+  $(document).on("view:HomePage", function() {
+    console.log("You are at home page");
+  }); */
+
   if (pathname === "/detail.html") {
     $(document).trigger("view:productPage");
-  }
+  } else if (pathname === "/index.html") {
+    $(document).trigger("view:HomePage");
+  } else if (pathname === "/basket.html") {
+    $(document).trigger("view:Basket");
+  } else if (pathname === "/checkout1.html") {
+    $(document).trigger("view:Checkout");
+  } else if (pathname === "/checkout2.html") {
+    $(document).trigger("view:Delivery");
+  } else pathname === "/checkout3.html";
+  $(document).trigger("view:Payment");
+
+  $('.box-footer [type="submit"]').click(function() {
+    $(document).trigger("conversion");
+  });
 
   $(".breadcrumb").on("customer:Female", function() {
     console.log("customer is female");
