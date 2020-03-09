@@ -31,37 +31,56 @@ $(function() {
       return "Delivery";
     } else if (pathname.indexOf("/checkout3.html") > -1) {
       return "Payment";
+    } else if (pathname.indexOf("/checkout4.html") > -1) {
+      return "Checkout4";
     }
   }
 
   function getProduct() {
-    var productInfo = null;
-    if (pageName === "productPage") {
-      productInfo = {};
-      productInfo.productName = $("#productMain h1.text-center").text();
-      productInfo.productPrice = $("#productMain .price").text();
-      productInfo.productImage = $('.item [src="img/detailbig1.jpg"]');
-      return productInfo;
-    }
-    return productInfo;
-  }
-
-  function getPurchase() {
-    var purchase = [];
-      
     return {
-      totalPrice:...;
-      products: purchase;
+      productName: $("#productMain h1.text-center").text(),
+      productPrice: $("#productMain p.price").text(),
+      productImage: $('.item [src="img/detailbig1.jpg"]')
     };
   }
 
+  function getPurchase() {
+    var productInfoEls = $("#checkout table tbody tr");
+    var result = {};
+    result.totalPurchase = $("#checkout table tfoot th")
+      .eq(1)
+      .text();
+    result.productList = [];
+    $.each(productInfoEls, function(index, el) {
+      result.productList.push({
+        purchasetName: $(el)
+          .children()
+          .eq(1)
+          .text(),
+        purchasePrice: $(el)
+          .children()
+          .eq(3)
+          .text(),
+        quantity: $(el)
+          .children()
+          .eq(2)
+          .text(),
+        discount: $(el)
+          .children()
+          .eq(4)
+          .text()
+      });
+    });
+    return result;
+  }
+
   function getParam() {
+    var pageName = getPageName();
     var result = null;
     if (pageName === "productPage") {
       result = getProduct();
       return result;
-    }
-    if (pageName === 'Checkout') {
+    } else if (pageName === "Checkout4") {
       result = getPurchase();
       return result;
     }
@@ -70,9 +89,23 @@ $(function() {
   function triggerPageEvent() {
     var pageName = getPageName();
     var param = getParam();
-    $(document).trigger("view:" + pageName, param);
+    if (pageName === "Checkout4") {
+      //specific event listener for checkout4 page
+      $("#checkout button").on("click", function() {
+        $(document).trigger("conversion");
+      });
+    } else {
+      $(document).trigger("view:" + pageName, param);
+    }
   }
 
+  $(document).on("view:productPage", function(event, param) {
+    console.log(event);
+    console.log(param);
+    //can add google analytics event
+  });
+
+  triggerPageEvent();
   $('.box-footer [type="submit"]').click(function() {
     $(document).trigger("conversion");
   });
